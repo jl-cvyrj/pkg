@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>колеравыя мадэлі: XYZ, LAB, HLS</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --text-color: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+        }
+        
+        .color-display {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+        
+        .models-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .model-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .model-title {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .color-input {
+            margin-bottom: 15px;
+        }
+        
+        .color-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-group input[type="range"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .input-group input[type="number"] {
+            width: 60px;
+        }
+        
+        .warning {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .color-picker-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .models-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Колеравыя мадэлі: XYZ, LAB, HLS</h1>
+            <p>змяняйце значэнні ў любой мадэлі, колер аўтаматычна абнавіцца ва ўсіх астатніх</p>
+        </header>
+        
+        <div class="color-display" id="colorDisplay"></div>
+        
+        <div class="models-container">
+           
+            <div class="model-card">
+                <h2 class="model-title">мадэль XYZ</h2>
+                <div class="color-input">
+                    <label for="xyz-x">X (0-95.047)</label>
+                    <div class="input-group">
+                        <input type="range" id="xyz-x" min="0" max="95.047" step="0.001" value="41.24">
+                        <input type="number" id="xyz-x-value" min="0" max="95.047" step="0.001" value="41.24">
+                    </div>
+                    <div class="warning" id="xyz-x-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+                <div class="color-input">
+                    <label for="xyz-y">Y (0-100)</label>
+                    <div class="input-group">
+                        <input type="range" id="xyz-y" min="0" max="100" step="0.001" value="21.26">
+                        <input type="number" id="xyz-y-value" min="0" max="100" step="0.001" value="21.26">
+                    </div>
+                    <div class="warning" id="xyz-y-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+                <div class="color-input">
+                    <label for="xyz-z">Z (0-108.883)</label>
+                    <div class="input-group">
+                        <input type="range" id="xyz-z" min="0" max="108.883" step="0.001" value="1.93">
+                        <input type="number" id="xyz-z-value" min="0" max="108.883" step="0.001" value="1.93">
+                    </div>
+                    <div class="warning" id="xyz-z-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+            </div>
+            
+            <div class="model-card">
+                <h2 class="model-title">мадэль LAB</h2>
+                <div class="color-input">
+                    <label for="lab-l">L (0-100)</label>
+                    <div class="input-group">
+                        <input type="range" id="lab-l" min="0" max="100" step="0.1" value="30">
+                        <input type="number" id="lab-l-value" min="0" max="100" step="0.1" value="30">
+                    </div>
+                    <div class="warning" id="lab-l-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+                <div class="color-input">
+                    <label for="lab-a">A (-128 to 127)</label>
+                    <div class="input-group">
+                        <input type="range" id="lab-a" min="-128" max="127" step="0.1" value="40">
+                        <input type="number" id="lab-a-value" min="-128" max="127" step="0.1" value="40">
+                    </div>
+                    <div class="warning" id="lab-a-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+                <div class="color-input">
+                    <label for="lab-b">B (-128 to 127)</label>
+                    <div class="input-group">
+                        <input type="range" id="lab-b" min="-128" max="127" step="0.1" value="20">
+                        <input type="number" id="lab-b-value" min="-128" max="127" step="0.1" value="20">
+                    </div>
+                    <div class="warning" id="lab-b-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+            </div>
+            
+            <div class="model-card">
+                <h2 class="model-title">мадэль HLS</h2>
+                <div class="color-input">
+                    <label for="hls-h">H (0-360)</label>
+                    <div class="input-group">
+                        <input type="range" id="hls-h" min="0" max="360" step="1" value="30">
+                        <input type="number" id="hls-h-value" min="0" max="360" step="1" value="30">
+                    </div>
+                    <div class="warning" id="hls-h-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+                <div class="color-input">
+                    <label for="hls-l">L (0-100)</label>
+                    <div class="input-group">
+                        <input type="range" id="hls-l" min="0" max="100" step="1" value="50">
+                        <input type="number" id="hls-l-value" min="0" max="100" step="1" value="50">
+                    </div>
+                    <div class="warning" id="hls-l-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+                <div class="color-input">
+                    <label for="hls-s">S (0-100)</label>
+                    <div class="input-group">
+                        <input type="range" id="hls-s" min="0" max="100" step="1" value="100">
+                        <input type="number" id="hls-s-value" min="0" max="100" step="1" value="100">
+                    </div>
+                    <div class="warning" id="hls-s-warning">значэнне выходзіць за дапусцімыя ліміты</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="color-picker-container">
+            <label for="colorPicker">або абярыце колер з палітры:</label>
+            <input type="color" id="colorPicker" value="#ff0000">
+        </div>
+    </div>
+
+    <script>
+        const REF_X = 95.047;
+        const REF_Y = 100.0;
+        const REF_Z = 108.883;
+        const REF_U = 0.2009;
+        const REF_V = 0.4610;
+        const EPSILON = 0.008856;
+        const KAPPA = 903.3;
+
+        const colorDisplay = document.getElementById('colorDisplay');
+        const colorPicker = document.getElementById('colorPicker');
+        
+        const xyzX = document.getElementById('xyz-x');
+        const xyzXValue = document.getElementById('xyz-x-value');
+        const xyzY = document.getElementById('xyz-y');
+        const xyzYValue = document.getElementById('xyz-y-value');
+        const xyzZ = document.getElementById('xyz-z');
+        const xyzZValue = document.getElementById('xyz-z-value');
+        
+        const labL = document.getElementById('lab-l');
+        const labLValue = document.getElementById('lab-l-value');
+        const labA = document.getElementById('lab-a');
+        const labAValue = document.getElementById('lab-a-value');
+        const labB = document.getElementById('lab-b');
+        const labBValue = document.getElementById('lab-b-value');
+        
+        const hlsH = document.getElementById('hls-h');
+        const hlsHValue = document.getElementById('hls-h-value');
+        const hlsL = document.getElementById('hls-l');
+        const hlsLValue = document.getElementById('hls-l-value');
+        const hlsS = document.getElementById('hls-s');
+        const hlsSValue = document.getElementById('hls-s-value');
+        
+        let currentRgb = { r: 255, g: 0, b: 0 };
+        
+        let updating = false;
+        
+        function init() {
+            updateColorDisplay();
+            
+            xyzX.addEventListener('input', () => handleXyzInput('x', xyzX.value));
+            xyzXValue.addEventListener('input', () => handleXyzInput('x', xyzXValue.value));
+            xyzY.addEventListener('input', () => handleXyzInput('y', xyzY.value));
+            xyzYValue.addEventListener('input', () => handleXyzInput('y', xyzYValue.value));
+            xyzZ.addEventListener('input', () => handleXyzInput('z', xyzZ.value));
+            xyzZValue.addEventListener('input', () => handleXyzInput('z', xyzZValue.value));
+            
+            labL.addEventListener('input', () => handleLabInput('l', labL.value));
+            labLValue.addEventListener('input', () => handleLabInput('l', labLValue.value));
+            labA.addEventListener('input', () => handleLabInput('a', labA.value));
+            labAValue.addEventListener('input', () => handleLabInput('a', labAValue.value));
+            labB.addEventListener('input', () => handleLabInput('b', labB.value));
+            labBValue.addEventListener('input', () => handleLabInput('b', labBValue.value));
+            
+            hlsH.addEventListener('input', () => handleHlsInput('h', hlsH.value));
+            hlsHValue.addEventListener('input', () => handleHlsInput('h', hlsHValue.value));
+            hlsL.addEventListener('input', () => handleHlsInput('l', hlsL.value));
+            hlsLValue.addEventListener('input', () => handleHlsInput('l', hlsLValue.value));
+            hlsS.addEventListener('input', () => handleHlsInput('s', hlsS.value));
+            hlsSValue.addEventListener('input', () => handleHlsInput('s', hlsSValue.value));
+            
+            colorPicker.addEventListener('input', handleColorPickerInput);
+        }
+        
+        function handleXyzInput(component, value) {
+            if (updating) return;
+            updating = true;
+            
+            if (component === 'x') {
+                xyzX.value = value;
+                xyzXValue.value = value;
+            } else if (component === 'y') {
+                xyzY.value = value;
+                xyzYValue.value = value;
+            } else if (component === 'z') {
+                xyzZ.value = value;
+                xyzZValue.value = value;
+            }
+            
+            const x = parseFloat(xyzX.value);
+            const y = parseFloat(xyzY.value);
+            const z = parseFloat(xyzZ.value);
+            
+            const lab = xyzToLab(x, y, z);
+            updateLabInputs(lab.l, lab.a, lab.b);
+            
+            const rgb = labToRgb(lab.l, lab.a, lab.b);
+            updateRgbAndDisplay(rgb.r, rgb.g, rgb.b);
+            
+            const hls = rgbToHls(rgb.r, rgb.g, rgb.b);
+            updateHlsInputs(hls.h, hls.l, hls.s);
+            
+            updateColorPicker(rgb.r, rgb.g, rgb.b);
+            
+            updating = false;
+        }
+        
+        function handleLabInput(component, value) {
+            if (updating) return;
+            updating = true;
+            
+            if (component === 'l') {
+                labL.value = value;
+                labLValue.value = value;
+            } else if (component === 'a') {
+                labA.value = value;
+                labAValue.value = value;
+            } else if (component === 'b') {
+                labB.value = value;
+                labBValue.value = value;
+            }
+            
+            const l = parseFloat(labL.value);
+            const a = parseFloat(labA.value);
+            const b = parseFloat(labB.value);
+            
+            const xyz = labToXyz(l, a, b);
+            updateXyzInputs(xyz.x, xyz.y, xyz.z);
+            
+            const rgb = labToRgb(l, a, b);
+            updateRgbAndDisplay(rgb.r, rgb.g, rgb.b);
+            
+            const hls = rgbToHls(rgb.r, rgb.g, rgb.b);
+            updateHlsInputs(hls.h, hls.l, hls.s);
+            
+            updateColorPicker(rgb.r, rgb.g, rgb.b);
+            
+            updating = false;
+        }
+        
+        function handleHlsInput(component, value) {
+            if (updating) return;
+            updating = true;
+            
+            if (component === 'h') {
+                hlsH.value = value;
+                hlsHValue.value = value;
+            } else if (component === 'l') {
+                hlsL.value = value;
+                hlsLValue.value = value;
+            } else if (component === 's') {
+                hlsS.value = value;
+                hlsSValue.value = value;
+            }
+            
+            const h = parseFloat(hlsH.value);
+            const l = parseFloat(hlsL.value);
+            const s = parseFloat(hlsS.value);
+            
+            const rgb = hlsToRgb(h, l, s);
+            updateRgbAndDisplay(rgb.r, rgb.g, rgb.b);
+            
+            const xyz = rgbToXyz(rgb.r, rgb.g, rgb.b);
+            updateXyzInputs(xyz.x, xyz.y, xyz.z);
+            
+            const lab = xyzToLab(xyz.x, xyz.y, xyz.z);
+            updateLabInputs(lab.l, lab.a, lab.b);
+            
+            updateColorPicker(rgb.r, rgb.g, rgb.b);
+            
+            updating = false;
+        }
+        
+        function handleColorPickerInput() {
+            if (updating) return;
+            updating = true;
+            
+            const hexColor = colorPicker.value;
+            const rgb = hexToRgb(hexColor);
+            updateRgbAndDisplay(rgb.r, rgb.g, rgb.b);
+            
+            const xyz = rgbToXyz(rgb.r, rgb.g, rgb.b);
+            updateXyzInputs(xyz.x, xyz.y, xyz.z);
+            
+            const lab = xyzToLab(xyz.x, xyz.y, xyz.z);
+            updateLabInputs(lab.l, lab.a, lab.b);
+            
+            const hls = rgbToHls(rgb.r, rgb.g, rgb.b);
+            updateHlsInputs(hls.h, hls.l, hls.s);
+            
+            updating = false;
+        }
+        
+        function updateXyzInputs(x, y, z) {
+            xyzX.value = x.toFixed(3);
+            xyzXValue.value = x.toFixed(3);
+            xyzY.value = y.toFixed(3);
+            xyzYValue.value = y.toFixed(3);
+            xyzZ.value = z.toFixed(3);
+            xyzZValue.value = z.toFixed(3);
+        }
+        
+        function updateLabInputs(l, a, b) {
+            labL.value = l.toFixed(1);
+            labLValue.value = l.toFixed(1);
+            labA.value = a.toFixed(1);
+            labAValue.value = a.toFixed(1);
+            labB.value = b.toFixed(1);
+            labBValue.value = b.toFixed(1);
+        }
+        
+        function updateHlsInputs(h, l, s) {
+            hlsH.value = Math.round(h);
+            hlsHValue.value = Math.round(h);
+            hlsL.value = Math.round(l);
+            hlsLValue.value = Math.round(l);
+            hlsS.value = Math.round(s);
+            hlsSValue.value = Math.round(s);
+        }
+        
+        function updateColorPicker(r, g, b) {
+            const hex = rgbToHex(r, g, b);
+            colorPicker.value = hex;
+        }
+        
+        function updateRgbAndDisplay(r, g, b) {
+            currentRgb = { r, g, b };
+            updateColorDisplay();
+        }
+        
+        function updateColorDisplay() {
+            const hexColor = rgbToHex(currentRgb.r, currentRgb.g, currentRgb.b);
+            colorDisplay.style.backgroundColor = hexColor;
+        }
+        
+        function xyzToLab(x, y, z) {
+            let xn = x / REF_X;
+            let yn = y / REF_Y;
+            let zn = z / REF_Z;
+            
+            xn = xn > EPSILON ? Math.pow(xn, 1/3) : (KAPPA * xn + 16) / 116;
+            yn = yn > EPSILON ? Math.pow(yn, 1/3) : (KAPPA * yn + 16) / 116;
+            zn = zn > EPSILON ? Math.pow(zn, 1/3) : (KAPPA * zn + 16) / 116;
+            
+            const l = (116 * yn) - 16;
+            const a = 500 * (xn - yn);
+            const b = 200 * (yn - zn);
+            
+            return { l, a, b };
+        }
+        
+        function labToXyz(l, a, b) {
+            const yn = (l + 16) / 116;
+            const xn = a / 500 + yn;
+            const zn = yn - b / 200;
+            
+            const x = REF_X * (Math.pow(xn, 3) > EPSILON ? Math.pow(xn, 3) : (116 * xn - 16) / KAPPA);
+            const y = REF_Y * (l > KAPPA * EPSILON ? Math.pow((l + 16) / 116, 3) : l / KAPPA);
+            const z = REF_Z * (Math.pow(zn, 3) > EPSILON ? Math.pow(zn, 3) : (116 * zn - 16) / KAPPA);
+            
+            return { x, y, z };
+        }
+        
+        function labToRgb(l, a, b) {
+            const xyz = labToXyz(l, a, b);
+            
+            return xyzToRgb(xyz.x, xyz.y, xyz.z);
+        }
+        
+        function xyzToRgb(x, y, z) {
+            x = x / 100;
+            y = y / 100;
+            z = z / 100;
+            
+            let r = x * 3.2406 + y * -1.5372 + z * -0.4986;
+            let g = x * -0.9689 + y * 1.8758 + z * 0.0415;
+            let b = x * 0.0557 + y * -0.2040 + z * 1.0570;
+            
+            r = r > 0.0031308 ? 1.055 * Math.pow(r, 1/2.4) - 0.055 : 12.92 * r;
+            g = g > 0.0031308 ? 1.055 * Math.pow(g, 1/2.4) - 0.055 : 12.92 * g;
+            b = b > 0.0031308 ? 1.055 * Math.pow(b, 1/2.4) - 0.055 : 12.92 * b;
+            
+            r = Math.round(Math.max(0, Math.min(255, r * 255)));
+            g = Math.round(Math.max(0, Math.min(255, g * 255)));
+            b = Math.round(Math.max(0, Math.min(255, b * 255)));
+            
+            return { r, g, b };
+        }
+        
+        function rgbToXyz(r, g, b) {
+            let Rn = r / 255;
+            let Gn = g / 255;
+            let Bn = b / 255;
+            
+            Rn = Rn > 0.04045 ? Math.pow((Rn + 0.055) / 1.055, 2.4) : Rn / 12.92;
+            Gn = Gn > 0.04045 ? Math.pow((Gn + 0.055) / 1.055, 2.4) : Gn / 12.92;
+            Bn = Bn > 0.04045 ? Math.pow((Bn + 0.055) / 1.055, 2.4) : Bn / 12.92;
+            
+            Rn *= 100;
+            Gn *= 100;
+            Bn *= 100;
+            
+            const x = Rn * 0.4124 + Gn * 0.3576 + Bn * 0.1805;
+            const y = Rn * 0.2126 + Gn * 0.7152 + Bn * 0.0722;
+            const z = Rn * 0.0193 + Gn * 0.1192 + Bn * 0.9505;
+            
+            return { x, y, z };
+        }
+        
+        function rgbToHls(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0; 
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                
+                h /= 6;
+            }
+            
+            return {
+                h: Math.round(h * 360),
+                l: Math.round(l * 100),
+                s: Math.round(s * 100)
+            };
+        }
+        
+        function hlsToRgb(h, l, s) {
+            h /= 360;
+            l /= 100;
+            s /= 100;
+            
+            let r, g, b;
+            
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            
+            return {
+                r: Math.round(r * 255),
+                g: Math.round(g * 255),
+                b: Math.round(b * 255)
+            };
+        }
+        
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : { r: 0, g: 0, b: 0 };
+        }
+        
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+        
+        init();
+    </script>
+</body>
+</html>
