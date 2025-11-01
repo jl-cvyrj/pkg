@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  raster-algorithms:
+    build: .
+    container_name: raster-algorithms-app
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: host
+    stdin_open: true
+    tty: true

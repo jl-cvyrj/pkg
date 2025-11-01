@@ -1,0 +1,7 @@
+{
+    "files": [
+        "algorithms.py",
+        "main.py",
+        "plotter.py"
+    ]
+}
