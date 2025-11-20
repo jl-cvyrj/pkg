@@ -1,1 +1,1 @@
-labs 2 year
+uni labs
