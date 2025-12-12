@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Літара "П" - Лабараторная работа 6</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Лабараторная работа 6</h1>
+            <h2>Трохмерная візуалізацыя літары "П"</h2>
+            <div class="subtitle">
+                <span>А) Пабудова аб'екта</span> |
+                <span>Б) Трохмерныя пераўтварэнні</span> |
+                <span>В) Артаганальныя праекцыі</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <!-- 3D відарыс -->
+                <div class="view-container">
+                    <h3><i class="fas fa-cube"></i> 3D Аб'ект (Ізаметрычная праекцыя)</h3>
+                    <div class="canvas-container">
+                        <canvas id="mainCanvas" width="1000" height="400"></canvas>
+                        <div class="coordinate-system">
+                            <div class="axis x-axis">X</div>
+                            <div class="axis y-axis">Y</div>
+                            <div class="axis z-axis">Z</div>
+                        </div>
+                    </div>
+                    <div class="view-controls">
+                        <button id="resetView"><i class="fas fa-home"></i> Зыходны выгляд</button>
+                        <button id="toggleWireframe"><i class="fas fa-th"></i> Каркас/Паверхня</button>
+                        <button id="toggleLabels"><i class="fas fa-font"></i> Подпісы вяршынь</button>
+                        <div class="rotation-info">
+                            <span>Круціць:</span>
+                            <input type="range" id="rotateX" min="0" max="360" value="30"> X
+                            <input type="range" id="rotateY" min="0" max="360" value="45"> Y
+                            <input type="range" id="rotateZ" min="0" max="360" value="0"> Z
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Праекцыі -->
+                <div class="projections-container">
+                    <h3><i class="fas fa-layer-group"></i> Артаганальныя праекцыі</h3>
+                    <div class="projections">
+                        <div class="projection">
+                            <h4>XY (Зверху)</h4>
+                            <canvas id="projectionXY" width="240" height="200"></canvas>
+                        </div>
+                        <div class="projection">
+                            <h4>XZ (Спераду)</h4>
+                            <canvas id="projectionXZ" width="240" height="200"></canvas>
+                        </div>
+                        <div class="projection">
+                            <h4>YZ (Збоку)</h4>
+                            <canvas id="projectionYZ" width="240" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <!-- Кіраванне пераўтварэннямі -->
+                <div class="controls-container">
+                    <h3><i class="fas fa-sliders-h"></i> Кіраванне пераўтварэннямі</h3>
+                    
+                    <div class="control-group">
+                        <h4><i class="fas fa-arrows-alt"></i> Маштабаванне</h4>
+                        <div class="slider-container">
+                            <label>X: <span id="scaleXValue">1.0</span></label>
+                            <input type="range" id="scaleX" min="0.1" max="3" step="0.1" value="1">
+                        </div>
+                        <div class="slider-container">
+                            <label>Y: <span id="scaleYValue">1.0</span></label>
+                            <input type="range" id="scaleY" min="0.1" max="3" step="0.1" value="1">
+                        </div>
+                        <div class="slider-container">
+                            <label>Z: <span id="scaleZValue">1.0</span></label>
+                            <input type="range" id="scaleZ" min="0.1" max="3" step="0.1" value="1">
+                        </div>
+                        <button id="resetScale" class="btn-small"><i class="fas fa-redo"></i> Скінуць маштаб</button>
+                    </div>
+
+                    <div class="control-group">
+                        <h4><i class="fas fa-arrows-alt"></i> Перанос</h4>
+                        <div class="slider-container">
+                            <label>X: <span id="translateXValue">0</span></label>
+                            <input type="range" id="translateX" min="-2" max="2" step="0.1" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label>Y: <span id="translateYValue">0</span></label>
+                            <input type="range" id="translateY" min="-2" max="2" step="0.1" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label>Z: <span id="translateZValue">0</span></label>
+                            <input type="range" id="translateZ" min="-2" max="2" step="0.1" value="0">
+                        </div>
+                        <button id="resetTranslate" class="btn-small"><i class="fas fa-redo"></i> Скінуць перанос</button>
+                    </div>
+
+                    <div class="control-group">
+                        <h4><i class="fas fa-sync-alt"></i> Круціць вакол восяў</h4>
+                        <div class="slider-container">
+                            <label>Вакол X: <span id="rotateAxisXValue">0°</span></label>
+                            <input type="range" id="rotateAxisX" min="0" max="360" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label>Вакол Y: <span id="rotateAxisYValue">0°</span></label>
+                            <input type="range" id="rotateAxisY" min="0" max="360" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label>Вакол Z: <span id="rotateAxisZValue">0°</span></label>
+                            <input type="range" id="rotateAxisZ" min="0" max="360" value="0">
+                        </div>
+                        <button id="resetRotation" class="btn-small"><i class="fas fa-redo"></i> Скінуць кручэнне</button>
+                    </div>
+
+                    <div class="control-group">
+                        <h4><i class="fas fa-random"></i> Круціць вакол адвольнай восі</h4>
+                        <div class="axis-inputs">
+                            <div>
+                                <label>Вектар восі:</label>
+                                <input type="number" id="axisX" step="0.1" value="1" placeholder="X">,
+                                <input type="number" id="axisY" step="0.1" value="1" placeholder="Y">,
+                                <input type="number" id="axisZ" step="0.1" value="1" placeholder="Z">
+                            </div>
+                            <div>
+                                <label>Вугал: <span id="customRotateValue">0°</span></label>
+                                <input type="range" id="customRotate" min="0" max="360" value="0">
+                            </div>
+                        </div>
+                        <button id="applyCustomRotation" class="btn-small"><i class="fas fa-play"></i> Ужыць кручэнне</button>
+                    </div>
+
+                    <div class="matrix-container">
+                        <h4><i class="fas fa-table"></i> Матрыца пераўтварэння</h4>
+                        <div class="matrix" id="transformationMatrix">
+                            <div>1.000 0.000 0.000 0.000</div>
+                            <div>0.000 1.000 0.000 0.000</div>
+                            <div>0.000 0.000 1.000 0.000</div>
+                            <div>0.000 0.000 0.000 1.000</div>
+                        </div>
+                    </div>
+
+                    <button id="resetAll" class="btn-large"><i class="fas fa-broom"></i> Скінуць усе пераўтварэнні</button>
+                </div>
+
+                <!-- Інфармацыя -->
+                <div class="info-container">
+                    <h3><i class="fas fa-info-circle"></i> Інфармацыя пра літару "П"</h3>
+                    <div class="info-content">
+                        <p><strong>Літара "П":</strong> Аб'ёмная 3D мадэль</p>
+                        <p><strong>Вяршынь:</strong> <span id="vertexCount">24</span></p>
+                        <p><strong>Граней:</strong> <span id="faceCount">20</span></p>
+                        <p><strong>Кантаў:</strong> <span id="edgeCount">36</span></p>
+                        <p><strong>Статус:</strong> <span id="status">Гатова</span></p>
+                        <div class="instructions">
+                            <h4>Паказ літары "П":</h4>
+                            <ul>
+                                <li>◼ Адтуліна ў цэнтры</li>
+                                <li>◼ Аб'ёмная структура</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Лабараторная работа 6: Трохмерная візуалізацыя. Літара "П"</p>
+            <p class="copyright"> © 2025 Паўлоўская Караліна</h4></p>
+        </footer>
+    </div>
+
+    <script src="letter3d.js"></script>
+    <script src="transformations.js"></script>
+    <script src="renderer.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
